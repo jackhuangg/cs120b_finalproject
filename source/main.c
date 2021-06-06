@@ -87,48 +87,51 @@ int lights(int state){
 		case check:
 			PORTC = 0x00;
 			x = ADC;
-			if(((char)x == 0x01F) || ((char)x == 0x01E)){
+			unsigned char tmp = (char)x;
+			if(((char)x == 0x1F) || ((char)x == 0x1E)){
 				state = check;
 			}
 			if(array[tempcounter] == 8){
-				if(x == 0x01F){//right
-					PORTD = 0x02;
+				if(tmp == 0xF0){//right
 					state = waitcheck;	
 				}
 				else{
 					state = check;
-					triescounter++;
+					//triescounter++;
 				}
 			}
 			if(array[tempcounter] == 4){
-				if((char)x == 0x00C){
+				if((char)x == 0x0C){
 					state = waitcheck;
 				}
 				else{
 					state = check;
-					triescounter++;
+					//triescounter++;
 				}
 			}
 			if(array[tempcounter] == 2){
-				if((char)x == 0x027){//left
+				if((char)x == 0x27){//left
 					state = waitcheck;
 				}	
 				else{
 					state = check;
-					triescounter++;
+					//triescounter++;
 				}
 			}
 			if(array[tempcounter] == 1){
-				if((char)x == 0x018){//down
+				if((char)x == 0x18){//down
 					state = waitcheck;
 				}
 				else{
 					state = check;
-					triescounter++;
+					//triescounter++;
 				}
 			}
 			if(triescounter == 10){
 				state = wrong;
+			}
+			else{
+				state = check;
 			}
 			break;
 		case waitcheck:
@@ -144,6 +147,7 @@ int lights(int state){
 			state = display;
 			break;
 		case wrong:
+			state = display;
 			break;
 		default:
 			state = start;
@@ -162,7 +166,6 @@ int lights(int state){
 		case check:
 			break;
 		case waitcheck:
-			tempcounter++;
 			break;
 		case right:
 			scorecounter++;
@@ -170,14 +173,17 @@ int lights(int state){
 			tempcounter = 0;
 			break;
 		case wrong:
+			scorecounter = 0;
+			levelcounter = 0;
+			tempcounter = 0;
 			break;
 	}
 	return state;
 }
 
-int sound(int state){
-	return state;
-}
+//int sound(int state){
+//	return state;
+//}
 
 int main(void) {
     /* Insert DDR and PORT initializations */
@@ -186,8 +192,8 @@ int main(void) {
     DDRC = 0xFF; PORTC = 0x00;
     DDRD = 0xFF; PORTD = 0x00;
 
-    static task task1, task2;
-    task *tasks[] = {&task1,&task2};
+    static task task1;
+    task *tasks[] = {&task1};
     const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
     const char start = -1;
 
@@ -196,10 +202,10 @@ int main(void) {
     task1.elapsedTime = task1.period;
     task1.TickFct = &lights;
 
-    task2.state = start;
-    task2.period = 100;
-    task2.elapsedTime = task2.period;
-    task2.TickFct = &sound;
+    //task2.state = start;
+    //task2.period = 100;
+    //task2.elapsedTime = task2.period;
+    //task2.TickFct = &sound;
 
     unsigned long GCD = tasks[0]->period;
     for (int i = 0; i < numTasks; i++){
