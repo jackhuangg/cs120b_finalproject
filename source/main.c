@@ -49,7 +49,7 @@ void ADC_init(){
 //down B = 0x1E on PINC = 0
 
 enum lightstates{start,display,waitdisplay,check,waitcheck,right,wrong};
-int levelcounter = 1;
+int levelcounter = 99;
 int scorecounter = 0;
 int tempcounter = 0;
 int triescounter = 0;
@@ -93,9 +93,11 @@ int lights(int state){
 			}
 			if(array[tempcounter] == 8){
 				if(tmp == 0xF0){//right
+					PORTD = 0x40;
 					state = waitcheck;	
 				}
 				else{
+					PORTD = 0x20;
 					state = check;
 					//triescounter++;
 				}
