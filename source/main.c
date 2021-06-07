@@ -7,6 +7,7 @@
  *	I acknowledge all content contained herein, excluding template or example
  *	code, is my own original work.
  */
+//Sorry I couldn't get my code to work:/ I tried my best.
 #include <avr/io.h>
 #include "timer.h"
 #include <stdlib.h>
@@ -217,7 +218,9 @@ int main(void) {
     TimerSet(GCD);
     TimerOn();
     ADC_init();
- 
+	
+    time_t t;
+    srand((unsigned) time(&t)); //https://www.tutorialspoint.com/c_standard_library/c_function_rand.htm 
     for(int i = 0; i < 100; i++){
 	int temp = rand() % 4;
 	if(temp == 0){
